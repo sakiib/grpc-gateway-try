@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package your.service.v1;
+
+option go_package = "github.com/sakiib/grpc-gateway-try;pb";
+
+import "google/api/annotations.proto";
+
+message Book {
+  string id = 1;
+  string name = 2;
+}
+
+message CreateBookRequest {
+  Book book = 1;
+}
+
+message CreateBookResponse {
+  string id = 1;
+}
+
+message GetBookRequest {
+  string id = 1;
+}
+
+message GetBookResponse {
+  Book book = 1;
+}
+
+service BookService {
+  rpc CreateBook(CreateBookRequest) returns (CreateBookResponse) {
+    option (google.api.http) = {
+      post: "/v1/book/create"
+      body: "book"
+    };
+  };
+
+  rpc GetBook(GetBookRequest) returns (GetBookResponse) {
+    option (google.api.http) = {
+      get: "/v1/book/get/{id}"
+    };
+  }
+}

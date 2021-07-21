@@ -2,14 +2,10 @@ version: v1beta1
 plugins:
   - name: go
     out: gen/go
-    opt:
-      - paths=source_relative
+    opt: paths=source_relative
   - name: go-grpc
     out: gen/go
-    opt:
-      - paths=source_relative
+    opt: paths=source_relative,require_unimplemented_servers=true
   - name: grpc-gateway
     out: gen/go
-    opt:
-      - paths=source_relative
-      - generate_unbound_methods=true
+    opt: paths=source_relative
