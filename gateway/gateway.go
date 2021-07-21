@@ -2,10 +2,7 @@ package gateway
 
 import (
 	"context"
-	"crypto/tls"
 	"fmt"
-	"github.com/sakiib/grpc-gateway-demo/insecure"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/grpclog"
 	"io/ioutil"
 	"net/http"
@@ -29,7 +26,7 @@ func Run(dialAddr string) error {
 	conn, err := grpc.DialContext(
 		context.Background(),
 		dialAddr,
-		grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(insecure.CertPool, "")),
+		grpc.WithInsecure(),
 		grpc.WithBlock(),
 	)
 	if err != nil {
@@ -56,15 +53,6 @@ func Run(dialAddr string) error {
 			}
 		}),
 	}
-	// Empty parameters mean use the TLS Config specified with the server.
-	if strings.ToLower(os.Getenv("SERVE_HTTP")) == "true" {
-		log.Info("Serving gRPC-Gateway on http://", gatewayAddr)
-		return fmt.Errorf("serving gRPC-Gateway server: %w", gwServer.ListenAndServe())
-	}
 
-	gwServer.TLSConfig = &tls.Config{
-		Certificates: []tls.Certificate{insecure.Cert},
-	}
-	log.Info("Serving gRPC-Gateway on https://", gatewayAddr)
 	return fmt.Errorf("serving gRPC-Gateway server: %w", gwServer.ListenAndServe())
 }

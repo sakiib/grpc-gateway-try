@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"github.com/sakiib/grpc-gateway-demo/gateway"
 	"github.com/sakiib/grpc-gateway-demo/gen/go/proto"
-	"github.com/sakiib/grpc-gateway-demo/insecure"
 	"github.com/sakiib/grpc-gateway-demo/service"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
@@ -20,7 +18,7 @@ func main() {
 
 	log.Printf("starting the server on port: %s", *port)
 
-	grpcServer := grpc.NewServer(grpc.Creds(credentials.NewServerTLSFromCert(&insecure.Cert)))
+	grpcServer := grpc.NewServer()
 	bookServer := service.NewBookService(service.NewInMemStore())
 	reflection.Register(grpcServer)
 
